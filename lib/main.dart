@@ -4,7 +4,6 @@ import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'utils/constants.dart';
-import 'utils/custom_route_transition.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,17 +20,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
       ),
       initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/':
-            return CustomRouteTransition(page: HomeScreen(), routeName: '/');
-          case '/login':
-            return CustomRouteTransition(page: LoginScreen(), routeName: '/login');
-          case '/register':
-            return CustomRouteTransition(page: RegisterScreen(), routeName: '/register');
-          default:
-            return null;
-        }
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
       },
     );
   }

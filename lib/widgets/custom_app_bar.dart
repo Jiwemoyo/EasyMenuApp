@@ -1,10 +1,6 @@
 // lib/widgets/custom_app_bar.dart
-import 'package:easy_menu_app/screens/home_screen.dart';
-import 'package:easy_menu_app/screens/login_screen.dart';
-import 'package:easy_menu_app/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
-import '../utils/custom_route_transition.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String currentPage;
@@ -30,41 +26,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
     _selectedIndex = _buttons.indexOf(_selectedButton);
   }
 
-// lib/widgets/custom_app_bar.dart
-
-// ...
-
   void _navigateToScreen(BuildContext context, int index) {
     if (_buttons[index] != _selectedButton) {
-      Widget nextPage;
-      String routeName;
-
       switch (index) {
         case 0:
-          nextPage = HomeScreen();
-          routeName = '/';
+          Navigator.pushReplacementNamed(context, '/');
           break;
         case 1:
-          nextPage = LoginScreen();
-          routeName = '/login';
+          Navigator.pushReplacementNamed(context, '/login');
           break;
         case 2:
-          nextPage = RegisterScreen();
-          routeName = '/register';
+          Navigator.pushReplacementNamed(context, '/register');
           break;
-        default:
-          return;
       }
-
-      Navigator.pushReplacement(
-        context,
-        CustomRouteTransition(page: nextPage, routeName: routeName),
-      );
-
-      setState(() {
-        _selectedButton = _buttons[index];
-        _selectedIndex = index;
-      });
     }
   }
 
@@ -135,9 +109,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             child: Text(
                               _buttons[index],
                               style: robotoSubtitleStyle.copyWith(
-                                color: _selectedIndex == index
-                                    ? WhiteColor
-                                    : GreenColor,
+                                color: _selectedIndex == index ? WhiteColor : GreenColor,
                               ),
                             ),
                           ),
