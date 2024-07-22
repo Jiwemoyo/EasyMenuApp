@@ -1,7 +1,12 @@
+// lib/widgets/custom_app_bar.dart
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final Function(int) onButtonPressed;
+
+  CustomAppBar({required this.onButtonPressed});
+
   @override
   Size get preferredSize => Size.fromHeight(120.0);
 
@@ -78,6 +83,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                               setState(() {
                                 _selectedButton = _buttons[index];
                                 _selectedIndex = index;
+                                widget.onButtonPressed(index);
                               });
                             },
                             style: TextButton.styleFrom(
