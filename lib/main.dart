@@ -1,9 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
 import 'utils/constants.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,18 +11,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Easy Menu',
+      title: 'Food Social Network',
       theme: ThemeData(
-        primaryColor: GreenColor,
-        hintColor: WhiteColor,
-        fontFamily: 'Roboto',
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: WhiteColor,
+        appBarTheme: AppBarTheme(
+          color: GreenColor,
+          iconTheme: IconThemeData(color: WhiteColor),
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Pacifico',
+            fontSize: 24,
+            color: WhiteColor,
+          ),
+        ),
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(fontFamily: 'Pacifico', fontSize: 24, color: WhiteColor),
+          bodyLarge: TextStyle(fontFamily: 'Roboto-bold', fontSize: 16, color: Colors.black),
+          bodyMedium: TextStyle(fontFamily: 'Roboto-bold', fontSize: 14, color: Colors.black),
+        ),
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomeScreen(),
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-      },
+      home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

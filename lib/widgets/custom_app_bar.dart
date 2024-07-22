@@ -1,12 +1,7 @@
-// lib/widgets/custom_app_bar.dart
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String currentPage;
-
-  CustomAppBar({Key? key, required this.currentPage}) : super(key: key);
-
   @override
   Size get preferredSize => Size.fromHeight(120.0);
 
@@ -15,32 +10,9 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  late String _selectedButton;
-  late int _selectedIndex;
+  String _selectedButton = 'Recetas';
+  int _selectedIndex = 0;
   final List<String> _buttons = ['Recetas', 'Login', 'Registro'];
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedButton = widget.currentPage;
-    _selectedIndex = _buttons.indexOf(_selectedButton);
-  }
-
-  void _navigateToScreen(BuildContext context, int index) {
-    if (_buttons[index] != _selectedButton) {
-      switch (index) {
-        case 0:
-          Navigator.pushReplacementNamed(context, '/');
-          break;
-        case 1:
-          Navigator.pushReplacementNamed(context, '/login');
-          break;
-        case 2:
-          Navigator.pushReplacementNamed(context, '/register');
-          break;
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +74,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         return SizedBox(
                           width: buttonWidth,
                           child: TextButton(
-                            onPressed: () => _navigateToScreen(context, index),
+                            onPressed: () {
+                              setState(() {
+                                _selectedButton = _buttons[index];
+                                _selectedIndex = index;
+                              });
+                            },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(vertical: 10),
                             ),
