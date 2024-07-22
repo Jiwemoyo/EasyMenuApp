@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
+  final VoidCallback onNavigateToLogin;
+
+  RegisterScreen({required this.onNavigateToLogin});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -85,16 +89,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: WhiteColor, backgroundColor: GreenColor,
+                    foregroundColor: WhiteColor,
+                    backgroundColor: GreenColor,
                   ),
                   child: Text('Regístrate'),
                 ),
                 SizedBox(height: 16),
                 TextButton(
-                  onPressed: () {
-                    // Navegar a la pantalla de login
-                    Navigator.pushNamed(context, '/login');
-                  },
+                  onPressed: widget.onNavigateToLogin,
                   child: Text(
                     '¿Ya tienes una cuenta? Inicia sesión',
                     style: TextStyle(color: GreenColor),

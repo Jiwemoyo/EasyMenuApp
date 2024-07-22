@@ -4,8 +4,9 @@ import '../utils/constants.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(int) onButtonPressed;
+  final int currentIndex;
 
-  CustomAppBar({required this.onButtonPressed});
+  CustomAppBar({required this.onButtonPressed, required this.currentIndex});
 
   @override
   Size get preferredSize => Size.fromHeight(120.0);
@@ -15,8 +16,6 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  String _selectedButton = 'Recetas';
-  int _selectedIndex = 0;
   final List<String> _buttons = ['Recetas', 'Login', 'Registro'];
 
   @override
@@ -58,7 +57,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     AnimatedPositioned(
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
-                      left: _selectedIndex * buttonWidth,
+                      left: widget.currentIndex * buttonWidth,
                       top: 0,
                       bottom: 0,
                       child: Container(
@@ -80,11 +79,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           width: buttonWidth,
                           child: TextButton(
                             onPressed: () {
-                              setState(() {
-                                _selectedButton = _buttons[index];
-                                _selectedIndex = index;
-                                widget.onButtonPressed(index);
-                              });
+                              widget.onButtonPressed(index);
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(vertical: 10),
@@ -92,7 +87,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             child: Text(
                               _buttons[index],
                               style: robotoSubtitleStyle.copyWith(
-                                color: _selectedIndex == index ? WhiteColor : GreenColor,
+                                color: widget.currentIndex == index ? WhiteColor : GreenColor,
                               ),
                             ),
                           ),

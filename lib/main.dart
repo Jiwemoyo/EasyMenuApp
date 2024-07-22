@@ -34,12 +34,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontFamily: 'Roboto-bold', fontSize: 14, color: Colors.black),
         ),
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MainScreen(),
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-      },
+      home: MainScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -53,21 +48,24 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    HomeScreen(),
-    LoginScreen(),
-    RegisterScreen(),
-  ];
+  void _navigateTo(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _screens = [
+      HomeScreen(),
+      LoginScreen(onNavigateToRegister: () => _navigateTo(2)),
+      RegisterScreen(onNavigateToLogin: () => _navigateTo(1)),
+    ];
+
     return Scaffold(
       appBar: CustomAppBar(
-        onButtonPressed: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onButtonPressed: _navigateTo,
+        currentIndex: _selectedIndex,
       ),
       body: IndexedStack(
         index: _selectedIndex,
