@@ -34,7 +34,12 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontFamily: 'Roboto-bold', fontSize: 14, color: Colors.black),
         ),
       ),
-      home: MainScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MainScreen(),
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
@@ -51,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     HomeScreen(),
     LoginScreen(),
-    RegistroScreen(),
+    RegisterScreen(),
   ];
 
   @override
