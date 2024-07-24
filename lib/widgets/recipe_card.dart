@@ -29,12 +29,7 @@ class RecipeCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.asset(
-                  imagePath,
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+                child: _buildImage(),
               ),
               ElevatedButton(
                 onPressed: onViewDetails,
@@ -52,7 +47,7 @@ class RecipeCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Por $author',
+                  'Por ${author.isNotEmpty ? author : 'Desconocido'}',
                   style: robotoSubtitleStyle.copyWith(fontWeight: FontWeight.bold),
                 ),
                 Row(
@@ -60,7 +55,7 @@ class RecipeCard extends StatelessWidget {
                     Icon(Icons.favorite, color: Colors.red),
                     SizedBox(width: 4),
                     Text(
-                      '$likes',
+                      '${likes >= 0 ? likes : 0}',
                       style: robotoSubtitleStyle,
                     ),
                   ],
@@ -70,6 +65,32 @@ class RecipeCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (imagePath.isNotEmpty && (imagePath.startsWith('http') || imagePath.startsWith('https'))) {
+      return Image.network(
+        imagePath,
+        width: double.infinity,
+        height: 200,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
+          return _buildDefaultImage();
+        },
+      );
+    } else {
+      return _buildDefaultImage();
+    }
+  }
+
+  Widget _buildDefaultImage() {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      color: Colors.grey[300],
+      child: Icon(Icons.restaurant, size: 50, color: Colors.white),
     );
   }
 }

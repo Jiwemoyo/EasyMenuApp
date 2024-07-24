@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.2.2  # Añadida la dependencia http
 
 dev_dependencies:
   flutter_test:
@@ -19,7 +20,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/images/default.png
 
   fonts:
     - family: Pacifico
