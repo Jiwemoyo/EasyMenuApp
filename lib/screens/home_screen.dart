@@ -17,6 +17,16 @@ class _HomeScreenState extends State<HomeScreen> {
     _recipesFuture = ApiService.getRecipes();
   }
 
+  String _buildImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) {
+      return '';
+    }
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return imagePath;
+    }
+    return 'https://apieasymenu.onrender.com$imagePath'; // Ajusta esta URL base según tu API
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No hay recetas disponibles'));
           } else {
+            print('Recipe data: ${snapshot.data}');
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
@@ -45,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context, index) {
                   final recipe = snapshot.data![index];
                   return RecipeCard(
-                    imagePath: recipe['image']?.toString() ?? 'assets/images/default.png',
+                    imagePath: _buildImageUrl(recipe['image']?.toString()),
                     author: recipe['author']?['username']?.toString() ?? 'Desconocido',
                     likes: recipe['likesCount'] is int ? recipe['likesCount'] : 0,
                     onViewDetails: () {
@@ -81,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Text('Likes: ${recipe['likesCount'] ?? 0}'),
               SizedBox(height: 8),
               Text('Descripción: ${recipe['description'] ?? 'Sin descripción'}'),
-              // Puedes agregar más detalles aquí según la estructura de tus datos
             ],
           ),
         );

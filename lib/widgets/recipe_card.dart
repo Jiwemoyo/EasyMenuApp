@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../utils/constants.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -70,12 +71,13 @@ class RecipeCard extends StatelessWidget {
 
   Widget _buildImage() {
     if (imagePath.isNotEmpty && (imagePath.startsWith('http') || imagePath.startsWith('https'))) {
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+        imageUrl: imagePath,
         width: double.infinity,
         height: 200,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
+        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+        errorWidget: (context, url, error) {
           print('Error loading image: $error');
           return _buildDefaultImage();
         },
