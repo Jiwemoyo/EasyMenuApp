@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final recipe = snapshot.data![index];
                   return RecipeCard(
                     imagePath: _buildImageUrl(recipe['image']?.toString()),
+                    title: recipe['title']?.toString() ?? 'Sin título',
                     author: recipe['author']?['username']?.toString() ?? 'Desconocido',
                     likes: recipe['likesCount'] is int ? recipe['likesCount'] : 0,
                     onViewDetails: () {

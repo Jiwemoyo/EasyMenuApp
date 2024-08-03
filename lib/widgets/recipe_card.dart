@@ -4,6 +4,7 @@ import '../utils/constants.dart';
 
 class RecipeCard extends StatelessWidget {
   final String imagePath;
+  final String title;
   final String author;
   final int likes;
   final VoidCallback onViewDetails;
@@ -11,6 +12,7 @@ class RecipeCard extends StatelessWidget {
   const RecipeCard({
     Key? key,
     required this.imagePath,
+    required this.title,
     required this.author,
     required this.likes,
     required this.onViewDetails,
@@ -44,20 +46,35 @@ class RecipeCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Por ${author.isNotEmpty ? author : 'Desconocido'}',
-                  style: robotoSubtitleStyle.copyWith(fontWeight: FontWeight.bold),
+                  title,
+                  style: pacificoTitleStyle.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                SizedBox(height: 4),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.favorite, color: Colors.red),
-                    SizedBox(width: 4),
                     Text(
-                      '${likes >= 0 ? likes : 0}',
-                      style: robotoSubtitleStyle,
+                      'Por ${author.isNotEmpty ? author : 'Desconocido'}',
+                      style: robotoSubtitleStyle.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.favorite, color: Colors.red),
+                        SizedBox(width: 4),
+                        Text(
+                          '${likes >= 0 ? likes : 0}',
+                          style: robotoSubtitleStyle,
+                        ),
+                      ],
                     ),
                   ],
                 ),
