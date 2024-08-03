@@ -86,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ProfileScreen(
                                   username: result['username'] ?? 'Usuario',
+                                  userId: result['userId'], // Pasar el userId
                                 ),
                               ),
                             );

@@ -48,6 +48,7 @@ class AuthService {
         return {
           'success': true,
           'username': responseData['username'] ?? email,
+          'userId': responseData['userId'], // Asegúrate de que tu API devuelva el userId
         };
       } else {
         print('Error en el login: ${response.body}');
