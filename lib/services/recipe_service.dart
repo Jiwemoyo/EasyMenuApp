@@ -8,14 +8,14 @@ class ApiService {
     try {
       final response = await http.get(Uri.parse('$baseUrl/recipes'));
 
-      print('API Response Status Code: ${response.statusCode}');
-      print('API Response Headers: ${response.headers}');
-      print('API Response Body: ${response.body}');
+      // print('API Response Status Code: ${response.statusCode}');
+      // print('API Response Headers: ${response.headers}');
+      // print('API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = jsonDecode(response.body);
         return jsonResponse.map((recipe) {
-          print('Recipe: $recipe');
+          // print('Recipe: $recipe');
           return recipe as Map<String, dynamic>;
         }).toList();
       } else {

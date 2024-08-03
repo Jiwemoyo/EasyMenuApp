@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No hay recetas disponibles'));
           } else {
-            print('Recipe data: ${snapshot.data}');
+            // print('Recipe data: ${snapshot.data}');
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
