@@ -91,17 +91,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.register(
+                          Map<String, dynamic> result = await _authService.register(
                             _usernameController.text,
                             _emailController.text,
                             _passwordController.text,
                           );
-                          if (success) {
+                          if (result['success']) {
                             print('Registro exitoso');
-                            // Aquí puedes navegar a la pantalla de login o mostrar un mensaje de éxito
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Registro exitoso. Por favor, inicie sesión.')),
+                            );
+                            widget.onNavigateToLogin();
                           } else {
-                            print('Error en el registro');
-                            // Aquí puedes mostrar un diálogo de error
+                            print('Error en el registro: ${result['message']}');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error en el registro: ${result['message']}')),
+                            );
                           }
                         }
                       },

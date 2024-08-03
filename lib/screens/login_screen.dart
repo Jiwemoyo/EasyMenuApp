@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
+import 'profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback onNavigateToRegister;
@@ -75,16 +76,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.login(
+                          Map<String, dynamic> result = await _authService.login(
                             _emailController.text,
                             _passwordController.text,
                           );
-                          if (success) {
+                          if (result['success']) {
                             print('Login exitoso');
-                            // Aquí puedes navegar a la pantalla principal
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                  username: result['username'] ?? 'Usuario',
+                                ),
+                              ),
+                            );
                           } else {
                             print('Error en el login');
-                            // Aquí puedes mostrar un diálogo de error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error en el inicio de sesión. Por favor, intente de nuevo.')),
+                            );
                           }
                         }
                       },
