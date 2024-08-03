@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback onNavigateToRegister;
@@ -14,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +73,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Aquí puedes manejar el inicio de sesión del usuario
+                          bool success = await _authService.login(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          if (success) {
+                            print('Login exitoso');
+                            // Aquí puedes navegar a la pantalla principal
+                          } else {
+                            print('Error en el login');
+                            // Aquí puedes mostrar un diálogo de error
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

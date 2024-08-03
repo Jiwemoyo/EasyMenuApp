@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
+import '../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   final VoidCallback onNavigateToLogin;
@@ -15,6 +16,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +89,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Aquí puedes manejar el registro del usuario
+                          bool success = await _authService.register(
+                            _usernameController.text,
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          if (success) {
+                            print('Registro exitoso');
+                            // Aquí puedes navegar a la pantalla de login o mostrar un mensaje de éxito
+                          } else {
+                            print('Error en el registro');
+                            // Aquí puedes mostrar un diálogo de error
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
