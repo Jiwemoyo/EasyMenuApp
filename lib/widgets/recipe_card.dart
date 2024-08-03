@@ -24,6 +24,7 @@ class RecipeCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color:WhiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
