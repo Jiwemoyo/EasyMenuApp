@@ -14,7 +14,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _recipesFuture = ApiService.getRecipes();
+    _recipesFuture = _getAndSortRecipes();
+  }
+
+  Future<List<Map<String, dynamic>>> _getAndSortRecipes() async {
+    List<Map<String, dynamic>> recipes = await ApiService.getRecipes();
+    recipes.sort((a, b) {
+      DateTime dateA = DateTime.parse(a['createdAt']);
+      DateTime dateB = DateTime.parse(b['createdAt']);
+      return dateB.compareTo(dateA);
+    });
+    return recipes;
   }
 
   String _buildImageUrl(String? imagePath) {
@@ -44,11 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No hay recetas disponibles'));
           } else {
-            // print('Recipe data: ${snapshot.data}');
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
-                  _recipesFuture = ApiService.getRecipes();
+                  _recipesFuture = _getAndSortRecipes();
                 });
               },
               child: ListView.builder(
