@@ -28,16 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userRecipesFuture = ApiService.getUserRecipes(widget.userId);
   }
 
-  String _buildImageUrl(String? imagePath) {
-    if (imagePath == null || imagePath.isEmpty) {
-      return '';
-    }
-    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-      return imagePath;
-    }
-    return 'https://apieasymenu.onrender.com$imagePath';
-  }
-
   void _deleteRecipe(String recipeId) async {
     try {
       await ApiService.deleteRecipe(recipeId);
@@ -95,9 +85,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: GreenColor),
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    'UserID: ${widget.userId}',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CreateRecipeScreen(userId: widget.userId)),
+                      );
+                      if (result == true) {
+                        setState(() {
+                          _loadUserRecipes();
+                        });
+                      }
+                    },
+                    child: Text('Crear Receta'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: GreenColor,
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
                   ),
                 ],
               ),
@@ -157,5 +161,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  String _buildImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) {
+      return '';
+    }
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return imagePath;
+    }
+    return 'https://apieasymenu.onrender.com$imagePath';
   }
 }

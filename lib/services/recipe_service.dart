@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'dart:io';
 
 class ApiService {
   static const String baseUrl = 'https://apieasymenu.onrender.com/api';
@@ -42,11 +44,25 @@ class ApiService {
 
   static Future<Map<String, dynamic>> createRecipe(Map<String, dynamic> recipeData) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/recipes'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(recipeData),
-      );
+      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/recipes'));
+      
+      request.fields['title'] = recipeData['title'];
+      request.fields['description'] = recipeData['description'];
+      request.fields['ingredients'] = json.encode(recipeData['ingredients']);
+      request.fields['steps'] = json.encode(recipeData['steps']);
+      request.fields['author'] = recipeData['author'];
+
+      if (recipeData['image'] != null) {
+        var file = await http.MultipartFile.fromPath(
+          'image',
+          recipeData['image'].path,
+          contentType: MediaType('image', 'jpeg'),
+        );
+        request.files.add(file);
+      }
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 201) {
         return json.decode(response.body);
@@ -61,11 +77,25 @@ class ApiService {
 
   static Future<Map<String, dynamic>> updateRecipe(String recipeId, Map<String, dynamic> recipeData) async {
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/recipes/$recipeId'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(recipeData),
-      );
+      var request = http.MultipartRequest('PUT', Uri.parse('$baseUrl/recipes/$recipeId'));
+
+      request.fields['title'] = recipeData['title'];
+      request.fields['description'] = recipeData['description'];
+      request.fields['ingredients'] = json.encode(recipeData['ingredients']);
+      request.fields['steps'] = json.encode(recipeData['steps']);
+      request.fields['author'] = recipeData['author'];
+
+      if (recipeData['image'] != null) {
+        var file = await http.MultipartFile.fromPath(
+          'image',
+          recipeData['image'].path,
+          contentType: MediaType('image', 'jpeg'),
+        );
+        request.files.add(file);
+      }
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
