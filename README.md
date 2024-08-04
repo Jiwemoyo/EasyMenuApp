@@ -1,3 +1,3 @@
 # easy_menu_app
 
-A new Flutter project.
+Aplicacion movil para web EasyMenu
