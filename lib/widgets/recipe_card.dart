@@ -8,6 +8,8 @@ class RecipeCard extends StatelessWidget {
   final String author;
   final int likes;
   final VoidCallback onViewDetails;
+  final VoidCallback? onDelete;
+  final VoidCallback? onUpdate;
 
   const RecipeCard({
     Key? key,
@@ -16,6 +18,8 @@ class RecipeCard extends StatelessWidget {
     required this.author,
     required this.likes,
     required this.onViewDetails,
+    this.onDelete,
+    this.onUpdate,
   }) : super(key: key);
 
   @override
@@ -24,7 +28,7 @@ class RecipeCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color:WhiteColor,
+      color: WhiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,6 +86,22 @@ class RecipeCard extends StatelessWidget {
               ],
             ),
           ),
+          if (onDelete != null || onUpdate != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (onUpdate != null)
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: onUpdate,
+                  ),
+                if (onDelete != null)
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: onDelete,
+                  ),
+              ],
+            ),
         ],
       ),
     );
