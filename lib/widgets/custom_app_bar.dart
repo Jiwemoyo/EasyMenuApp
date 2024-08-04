@@ -5,8 +5,13 @@ import '../utils/constants.dart';
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(int) onButtonPressed;
   final int currentIndex;
+  final bool isLoggedIn;
 
-  CustomAppBar({required this.onButtonPressed, required this.currentIndex});
+  CustomAppBar({
+    required this.onButtonPressed,
+    required this.currentIndex,
+    required this.isLoggedIn,
+  });
 
   @override
   Size get preferredSize => Size.fromHeight(120.0);
@@ -16,7 +21,27 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  final List<String> _buttons = ['Recetas', 'Login', 'Registro'];
+  late List<String> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateButtons();
+  }
+
+  @override
+  void didUpdateWidget(CustomAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isLoggedIn != widget.isLoggedIn) {
+      _updateButtons();
+    }
+  }
+
+  void _updateButtons() {
+    _buttons = widget.isLoggedIn
+        ? ['Recetas', 'Perfil', 'Salir']
+        : ['Recetas', 'Login', 'Registro'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +76,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final buttonWidth = constraints.maxWidth / 3;
+                final buttonWidth = constraints.maxWidth / _buttons.length;
                 return Stack(
                   children: [
                     AnimatedPositioned(

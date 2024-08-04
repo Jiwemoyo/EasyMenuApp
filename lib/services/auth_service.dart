@@ -48,7 +48,7 @@ class AuthService {
         return {
           'success': true,
           'username': responseData['username'] ?? email,
-          'userId': responseData['userId'], // Asegúrate de que tu API devuelva el userId
+          'userId': responseData['userId'],
         };
       } else {
         print('Error en el login: ${response.body}');
@@ -57,6 +57,26 @@ class AuthService {
     } catch (e) {
       print('Error en la solicitud de login: $e');
       return {'success': false};
+    }
+  }
+
+  Future<Map<String, dynamic>> logout() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('Logout exitoso');
+        return {'success': true};
+      } else {
+        print('Error en el logout: ${response.body}');
+        return {'success': false, 'message': 'Error en el logout'};
+      }
+    } catch (e) {
+      print('Error en la solicitud de logout: $e');
+      return {'success': false, 'message': 'Error en la conexión'};
     }
   }
 }

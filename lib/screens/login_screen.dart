@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import '../services/auth_service.dart';
-import 'profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  final Function(String, String) onLogin;
   final VoidCallback onNavigateToRegister;
 
-  LoginScreen({required this.onNavigateToRegister});
+  LoginScreen({required this.onLogin, required this.onNavigateToRegister});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -82,14 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                           if (result['success']) {
                             print('Login exitoso');
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => ProfileScreen(
-                                  username: result['username'] ?? 'Usuario',
-                                  userId: result['userId'], // Pasar el userId
-                                ),
-                              ),
-                            );
+                            widget.onLogin(result['username'] ?? 'Usuario', result['userId']);
                           } else {
                             print('Error en el login');
                             ScaffoldMessenger.of(context).showSnackBar(

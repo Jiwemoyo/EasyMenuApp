@@ -4,6 +4,7 @@ import 'utils/constants.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/profile_screen.dart';
 import 'widgets/custom_app_bar.dart';
 
 void main() {
@@ -47,6 +48,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _isLoggedIn = false;
+  String? _username;
+  String? _userId;
 
   void _navigateTo(int index) {
     setState(() {
@@ -54,18 +58,47 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _handleLogin(String username, String userId) {
+    setState(() {
+      _isLoggedIn = true;
+      _username = username;
+      _userId = userId;
+      _selectedIndex = 1; // Cambiar a la pantalla de perfil (índice 1)
+    });
+  }
+
+  void _handleLogout() {
+    setState(() {
+      _isLoggedIn = false;
+      _username = null;
+      _userId = null;
+      _selectedIndex = 0; // Volver a la pantalla de inicio
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _screens = [
       HomeScreen(),
-      LoginScreen(onNavigateToRegister: () => _navigateTo(2)),
-      RegisterScreen(onNavigateToLogin: () => _navigateTo(1)),
+      _isLoggedIn
+          ? ProfileScreen(username: _username ?? '', userId: _userId ?? '')
+          : LoginScreen(onLogin: _handleLogin, onNavigateToRegister: () => _navigateTo(2)),
+      _isLoggedIn
+          ? Container() // Placeholder para el botón "Salir"
+          : RegisterScreen(onNavigateToLogin: () => _navigateTo(1)),
     ];
 
     return Scaffold(
       appBar: CustomAppBar(
-        onButtonPressed: _navigateTo,
+        onButtonPressed: (index) {
+          if (_isLoggedIn && index == 2) {
+            _handleLogout();
+          } else {
+            _navigateTo(index);
+          }
+        },
         currentIndex: _selectedIndex,
+        isLoggedIn: _isLoggedIn,
       ),
       body: IndexedStack(
         index: _selectedIndex,
