@@ -86,19 +86,20 @@ class ApiService {
     try {
       var request = http.MultipartRequest('PUT', Uri.parse('$baseUrl/recipes/$recipeId'));
 
-      // Obtener el token de autenticación
+      // Añadir el token de autenticación
       String? token = await AuthService.getToken();
       if (token != null) {
         request.headers['Authorization'] = 'Bearer $token';
       }
 
-      request.fields['title'] = recipeData['title'];
-      request.fields['description'] = recipeData['description'];
+      // Asegúrate de que los campos sean strings
+      request.fields['title'] = recipeData['title'].toString();
+      request.fields['description'] = recipeData['description'].toString();
       request.fields['ingredients'] = json.encode(recipeData['ingredients']);
       request.fields['steps'] = json.encode(recipeData['steps']);
-      request.fields['author'] = recipeData['author'];
+      request.fields['author'] = recipeData['author'].toString();
 
-      if (recipeData['image'] != null) {
+      if (recipeData['image'] != null && recipeData['image'] is File) {
         var file = await http.MultipartFile.fromPath(
           'image',
           recipeData['image'].path,
