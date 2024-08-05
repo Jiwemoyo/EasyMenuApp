@@ -111,8 +111,9 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                     });
                     Navigator.pop(context, true);
                   } catch (e) {
+                    print('Error detallado al crear la receta: $e');
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error al crear la receta')),
+                      SnackBar(content: Text('Error al crear la receta: $e')),
                     );
                   }
                 }

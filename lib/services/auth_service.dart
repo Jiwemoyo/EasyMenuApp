@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final String baseUrl = 'https://apieasymenu.onrender.com/api/auth';
+  static const String TOKEN_KEY = 'auth_token';
 
   Future<Map<String, dynamic>> register(String username, String email, String password) async {
     try {
@@ -45,10 +47,17 @@ class AuthService {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         print('Login exitoso: ${responseData['username']}');
+        
+        // Guardar el token
+        if (responseData['token'] != null) {
+          await _saveToken(responseData['token']);
+        }
+        
         return {
           'success': true,
           'username': responseData['username'] ?? email,
           'userId': responseData['userId'],
+          'token': responseData['token'],
         };
       } else {
         print('Error en el login: ${response.body}');
@@ -69,6 +78,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         print('Logout exitoso');
+        await _removeToken();
         return {'success': true};
       } else {
         print('Error en el logout: ${response.body}');
@@ -78,5 +88,20 @@ class AuthService {
       print('Error en la solicitud de logout: $e');
       return {'success': false, 'message': 'Error en la conexión'};
     }
+  }
+
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(TOKEN_KEY, token);
+  }
+
+  Future<void> _removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(TOKEN_KEY);
+  }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(TOKEN_KEY);
   }
 }

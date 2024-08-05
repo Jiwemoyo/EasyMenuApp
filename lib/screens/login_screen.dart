@@ -83,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (result['success']) {
                             print('Login exitoso');
                             widget.onLogin(result['username'] ?? 'Usuario', result['userId']);
+                            // Login exitoso, ahora puedes crear recetas
                           } else {
                             print('Error en el login');
                             ScaffoldMessenger.of(context).showSnackBar(

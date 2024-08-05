@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
+import 'auth_service.dart';
 
 class ApiService {
   static const String baseUrl = 'https://apieasymenu.onrender.com/api';
@@ -46,6 +47,12 @@ class ApiService {
     try {
       var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/recipes'));
       
+      // Obtener el token de autenticación
+      String? token = await AuthService.getToken();
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      
       request.fields['title'] = recipeData['title'];
       request.fields['description'] = recipeData['description'];
       request.fields['ingredients'] = json.encode(recipeData['ingredients']);
@@ -67,17 +74,23 @@ class ApiService {
       if (response.statusCode == 201) {
         return json.decode(response.body);
       } else {
-        throw Exception('Failed to create recipe: ${response.statusCode}');
+        throw Exception('Failed to create recipe: ${response.statusCode}. Response: ${response.body}');
       }
     } catch (e) {
       print('Error creating recipe: $e');
-      throw Exception('Failed to create recipe');
+      throw Exception('Failed to create recipe: $e');
     }
   }
 
   static Future<Map<String, dynamic>> updateRecipe(String recipeId, Map<String, dynamic> recipeData) async {
     try {
       var request = http.MultipartRequest('PUT', Uri.parse('$baseUrl/recipes/$recipeId'));
+
+      // Obtener el token de autenticación
+      String? token = await AuthService.getToken();
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
 
       request.fields['title'] = recipeData['title'];
       request.fields['description'] = recipeData['description'];
@@ -100,24 +113,29 @@ class ApiService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        throw Exception('Failed to update recipe: ${response.statusCode}');
+        throw Exception('Failed to update recipe: ${response.statusCode}. Response: ${response.body}');
       }
     } catch (e) {
       print('Error updating recipe: $e');
-      throw Exception('Failed to update recipe');
+      throw Exception('Failed to update recipe: $e');
     }
   }
 
   static Future<void> deleteRecipe(String recipeId) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/recipes/$recipeId'));
+      // Obtener el token de autenticación
+      String? token = await AuthService.getToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/recipes/$recipeId'),
+        headers: token != null ? {'Authorization': 'Bearer $token'} : null,
+      );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to delete recipe: ${response.statusCode}');
+        throw Exception('Failed to delete recipe: ${response.statusCode}. Response: ${response.body}');
       }
     } catch (e) {
       print('Error deleting recipe: $e');
-      throw Exception('Failed to delete recipe');
+      throw Exception('Failed to delete recipe: $e');
     }
   }
 }
